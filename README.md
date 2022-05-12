@@ -6,9 +6,9 @@ Projeto para disciplina de Linguagem de Programação 1 IMD0030 2022.1
 
 O trabalho é em dupla (não pode ser individual) e pode ser submetido via SIGAA (arquivo compactado com todo o código-fonte) ou via GitHub Classroom.
 
-Integrante 1: Nome Matrícula:
+Integrante 1: Nome: Alice Morena Cordeiro Rocha Matrícula:20210050077
 
-Integrante 2: Nome Matrícula:
+Integrante 2: Nome: Henrique Eduardo Martins da Silva Filho Matrícula:20210050522
 
 ## O Jogo
 

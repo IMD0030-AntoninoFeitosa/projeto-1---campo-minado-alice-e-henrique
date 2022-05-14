@@ -135,26 +135,7 @@ void start_game(Difficulty level) {
   std::cout << "Digite seu nome: ";
   std::cin >> usuario.name;
   usuario.nivel = level;
-  // usuario.milliseconds = 1.00000;
-  // usuario.name = "alice";
-
-  // vec.push_back(usuario);
-
-  // Record ** records {new Record*[vec.size()]};
-
-  // for(int i=0;i<vec.size();i++){
-  //   records[i] = new Record{vec[i]};
-  // }
-
-  // char output [] = "records.txt";
-
-  // write(output, vec.size(), records);
-
-  // for(int i=0;i<vec.size(); i++){
-  //   delete records[i];
-  // }
-  // delete [] records;
-
+  
   bool preencheu = false;
   std::vector<std::vector<char>> mapa;
   cenario cena = criar_map(level);
@@ -370,7 +351,6 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-// CRIAR UM .CPP para esses metodos se quiser
 
 int total_bombas(cenario cena, std::vector<int> celula) {
   int bombas = 0;
@@ -615,8 +595,7 @@ void preencher_bombas(cenario &cena, std::vector<int> celula) {
 
   int bombas = (rand() % size) + 1;
 
-  // std::cout << "BOMBAS: " << bombas <<std::endl;
-
+  
   for (int i = 0; i < bombas; i++) {
     int l = lados[i][0];
     int c = lados[i][1];

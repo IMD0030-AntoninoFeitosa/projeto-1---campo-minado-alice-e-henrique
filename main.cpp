@@ -64,6 +64,13 @@ void mostrar_mapa(cenario cena) {
       std::cout << " ";
     }
 
+    /*
+    8   1 2 3
+    9   4 5 6
+    10  7 8 9
+
+    */
+
     std::cout << i << " - ";
 
     for (int j = 0; j < cena.mapa[i].size(); j++) {
@@ -75,7 +82,7 @@ void mostrar_mapa(cenario cena) {
         int bombas = total_bombas(cena, celula);
 
         if (verifica_bomba(cena, celula)) {
-
+total_bombas(cena, celula);
           if (foi_marcada(cena, celula)) {
             std::cout << " ? ";
           } else {
@@ -137,6 +144,7 @@ void start_game(Difficulty level) {
   usuario.nivel = level;
   
   bool preencheu = false;
+  
   std::vector<std::vector<char>> mapa;
   cenario cena = criar_map(level);
 
@@ -175,7 +183,7 @@ void start_game(Difficulty level) {
 
           char output[] = "records.txt";
 
-          write(output, vec.size(), records);
+          write(output, vec.size(), records); // colocar
 
           for (int i = 0; i < vec.size(); i++) {
             delete records[i];
@@ -209,11 +217,12 @@ void start_game(Difficulty level) {
             bool eh_bomba = verifica_bomba(cena, celula);
 
             // comencando com 0
-            if (level == 1 && !preencheu && eh_valida) {
+            if (level == 1 && !preencheu && eh_valida) { 
+              // segundo argumento n pode ser sorteado como bombas
               preencher_bombas(cena, adjacentes(cena, celula));
             }
 
-            // comencando com numero
+            // um dos lados adjacentes tem que ser uma bomba
             if (level == 2 && !preencheu && eh_valida) {
               preencher_bombas(cena, celula);
             }
@@ -233,7 +242,10 @@ void start_game(Difficulty level) {
               std::vector<int> celula;
               celula.push_back(l);
               celula.push_back(c);
-              abrir_celulas_adjacentes(cena, celula);
+
+              if(total_bombas(cena, celula) == 0){
+                abrir_celulas_adjacentes(cena, celula); 
+              }
             } else {
               std::cout << "<< OPCAO INVÁLIDA >> " << std::endl;
             }
@@ -381,6 +393,15 @@ std::vector<std::vector<int>> adjacentes(cenario cena,
     temp.push_back(c);
     vetor_saida.push_back(temp);
 
+    //  c
+    /*  0 1 2 3 4
+    l 0 x x x x x
+      1 x x x x x
+      2 x x x x x
+      3 x x x x x
+      4 x x x x x
+    */
+
     if (c + 1 < cena.dimensoes.y) {
       std::vector<int> temp;
       temp.push_back(l - 1);
@@ -491,7 +512,7 @@ void marcar_celula(cenario &cena, std::vector<int> celula) {
 
   if (!revelada) {
     if (v == '@') {
-      cena.mapa[l][c] = '&';
+      cena.mapa[l][c] = '&';//bomba marcada
       cena.marcacoes++;
     } else if (v == '&') {
       cena.mapa[l][c] = '@';
@@ -549,12 +570,13 @@ std::vector<int> gerar_indices(cenario cena) {
 }
 
 void preencher_bombas(cenario &cena) {
+  //caso iniciante
   int count_bombas = 0;
   do {
     std::vector<int> indices = gerar_indices(cena);
     int l = indices[0];
     int c = indices[1];
-
+    //@ & ==  bomba
     if (cena.mapa[l][c] != '@') {
       cena.mapa[l][c] = '@';
       count_bombas++;
@@ -563,6 +585,8 @@ void preencher_bombas(cenario &cena) {
 }
 void preencher_bombas(cenario &cena, std::vector<std::vector<int>> invalidos) {
   int count_bombas = 0;
+
+  //intermediario não pode escolher os lados adjacentes para ser bombas
   do {
     std::vector<int> indices = gerar_indices(cena);
     int l = indices[0];
@@ -570,6 +594,8 @@ void preencher_bombas(cenario &cena, std::vector<std::vector<int>> invalidos) {
 
     bool esta_ao_lado = false;
 
+
+    //verifica se o indice gerado n esta ao lado
     for (int i = 0; i < invalidos.size(); i++) {
       if (l == invalidos[i][0] && c == invalidos[i][1]) {
         esta_ao_lado = true;
@@ -583,6 +609,8 @@ void preencher_bombas(cenario &cena, std::vector<std::vector<int>> invalidos) {
     }
   } while (count_bombas < cena.dimensoes.minas);
 }
+
+
 void preencher_bombas(cenario &cena, std::vector<int> celula) {
   srand((unsigned)time(0));
 
@@ -593,12 +621,16 @@ void preencher_bombas(cenario &cena, std::vector<int> celula) {
     size = size - 4;
   }
 
-  int bombas = (rand() % size) + 1;
+  int bombas = (rand() % size);
+
+  if(bombas == 0) bombas = 1;
 
   
   for (int i = 0; i < bombas; i++) {
     int l = lados[i][0];
     int c = lados[i][1];
+
+    //nao pode ter bomba na celula que ele marcou
     if (l != celula[0] && c != celula[1]) {
       cena.mapa[l][c] = '@';
     }
@@ -618,6 +650,8 @@ void preencher_bombas(cenario &cena, std::vector<int> celula) {
     }
   } while (count_bombas < cena.dimensoes.minas);
 }
+
+//sobrecarga
 
 bool verifica_bomba(cenario cena, std::vector<int> celula) {
   int l = celula[0];
